@@ -30,7 +30,16 @@ module BestInPlace
         value = fieldValue ? opts[:collection][1] : opts[:collection][0]
         collection = opts[:collection].to_json
       end
-      out = "<span class='best_in_place'"
+
+      
+      if opts[:type] == "ckeditor"
+      else
+      end
+      
+        
+      
+      out = "<span class='best_in_place'" if opts[:type] != "ckeditor"
+      out = "<div class='best_in_place'" if opts[:type] == "ckeditor"      
       out << " id='#{BestInPlace::Utils.build_best_in_place_id(object, field)}'"
       out << " data-url='#{opts[:path].blank? ? url_for(object) : url_for(opts[:path])}'"
       out << " data-object='#{opts[:object_name] || object.class.to_s.gsub("::", "_").underscore}'"
@@ -41,6 +50,10 @@ module BestInPlace
       out << " data-cancel-button='#{opts[:cancel_button]}'" unless opts[:cancel_button].blank?
       out << " data-nil='#{opts[:nil]}'" unless opts[:nil].blank?
       out << " data-type='#{opts[:type]}'"
+      out << " data-width='#{opts[:width]}'" if opts[:width]
+      out << " data-height='#{opts[:height]}'" if opts[:height]
+      out << " data-lang='#{opts[:lang]}'" if opts[:lang]
+      out << " data-toolbar='#{opts[:toolbar]}'" if opts[:toolbar]     
       out << " data-inner-class='#{opts[:inner_class]}'" if opts[:inner_class]
       out << " data-html-attrs='#{opts[:html_attrs].to_json}'" unless opts[:html_attrs].blank?
       out << " data-original-content='#{attribute_escape(object.send(field))}'" if opts[:display_as] || opts[:display_with]
@@ -50,7 +63,8 @@ module BestInPlace
       else
         out << ">#{sanitize(value, :tags => nil, :attributes => nil)}"
       end
-      out << "</span>"
+      out << "</span>" if opts[:type] != "ckeditor"
+      out << "</div>" if opts[:type] == "ckeditor"
       raw out
     end
 
